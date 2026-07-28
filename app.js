@@ -122,7 +122,12 @@
     bubble.className = "bubble";
     var messageText = document.createElement("div");
     messageText.className = "bubble-text";
-    messageText.textContent = text;
+    // 仅当答案字符串里包含 <img ... src=...> 时才按 HTML 渲染，其他答案仍走 textContent 避免 XSS
+    if (typeof text === "string" && /<img\s+[^>]*src=/i.test(text)) {
+      messageText.innerHTML = text;
+    } else {
+      messageText.textContent = text;
+    }
     bubble.appendChild(messageText);
 
     if (options && options.showQr) {
