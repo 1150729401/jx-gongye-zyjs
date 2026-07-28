@@ -122,8 +122,9 @@
     bubble.className = "bubble";
     var messageText = document.createElement("div");
     messageText.className = "bubble-text";
-    // 仅当答案字符串里包含 <img ... src=...> 时才按 HTML 渲染，其他答案仍走 textContent 避免 XSS
-    if (typeof text === "string" && /<img\s+[^>]*src=/i.test(text)) {
+    // 知识库答案均为学长自撰（可信），当答案里含受支持的富文本标签（图片/表格/换行/加粗等）时按 HTML 渲染，
+    // 否则走 textContent，避免把用户输入当 HTML 解析
+    if (typeof text === "string" && /<(img|table|br|b|strong|ul|ol|li|div|span|p)\b/i.test(text)) {
       messageText.innerHTML = text;
     } else {
       messageText.textContent = text;
